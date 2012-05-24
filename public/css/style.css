@@ -1,0 +1,65 @@
+body { font-family: Trebuchet MS; }
+a:visited { color: blue; }
+
+.ruler {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 300px;
+    height: 22px;
+    color: black;
+    background: whiteSmoke;
+    border: 1px solid #ccc;
+    border-right: 0;
+    overflow: hidden;
+    z-index: 1000;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.ruler.ruler-draggable {
+    cursor: move;
+}
+
+.ruler .ruler-resize {
+    position: absolute;
+    width: 10px;
+    height: 22px;
+    background: transparent;
+    z-index: 1001;
+    right: 0;
+    cursor: e-resize;
+}
+
+.ruler .ruler-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.ruler .ruler-small_line, .ruler .ruler-medium_line, .ruler .ruler-large_line {
+    width: 1px;
+    height: 30%;
+    border-right: 1px solid #ccc;
+    position: absolute;
+    bottom: 0;
+}
+
+.ruler .ruler-medium_line {
+    height: 50%;
+    top: auto;
+    border-right: 1px solid #999;
+}
+
+.ruler .ruler-large_line {
+    height: 100%;
+    top: 0px;
+    border-right: 1px solid #777;
+}
+
+.ruler .ruler-label {
+    position: absolute;
+    width: 20px;
+    height: 7px;
+    font-size: 8px;
+    text-align: left;
+}

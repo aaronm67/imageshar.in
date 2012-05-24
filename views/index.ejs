@@ -1,0 +1,60 @@
+drop or copy a file onto this page, I'll host it.
+<img id="loading" src="http://imageshar.in/img/TOZb9Ga0" style="display:none;" />
+<ul id="files"></ul>
+
+<a href="#" id="clear">clear</a>
+
+<script type="text/javascript">
+    var Urls = {
+        base64UploadUrl: "/upload"
+    };
+
+    $("#clear").click(function() { localStorage["images"] = "";window.location.reload(); });
+
+    function makeLi(id) {
+        var url = "http://imageshar.in/view/" + id;
+        var raw = "http://imageshar.in/img/" + id;
+        $("#files").append("<li><img src='" + raw + "' width=25 height=25 /><a href='" + url + "' target='_blank'>view</a>&nbsp;<a href='" + raw + "' target='_blank'>raw</a></li>");
+    }
+
+    $(function() {
+        localStorage["images"] = localStorage["images"] || "";
+        var prev = localStorage["images"].split(",");
+        prev.forEach(function(p) {
+            if(p) makeLi(p);
+        });
+
+        $("body").height($(window).height());
+        var count = 0;
+        var opts = {
+            readAsMap: { '.*': 'DataURL' }, 
+            dragClass: "filedrop", 
+            on: { 
+                loadstart: function() {
+                    count = (count || 0)+1;
+                    $("#loading").show();
+                },
+                load: function (e, file) { 
+                    var src = e.target.result; 
+                    var data = src.split(",")[1];
+                    $.post(Urls.base64UploadUrl, { 
+                        data: data, 
+                        name: file.name, 
+                        contentType: file.type 
+                    }, function (resp) {
+                        var data = localStorage["images"].split(",");
+                        data.push(resp);
+                        localStorage["images"] = data.join();
+                        makeLi(resp);
+                        count--;
+                        if (count === 0) {
+                            $("#loading").hide();
+                        }
+                    });
+                }
+            }
+        };
+
+        $("body").fileReaderJS(opts).fileClipboard(opts);
+    }); 
+</script>

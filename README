@@ -1,0 +1,7 @@
+Installation:
+
+npm install express
+npm install db-mysql
+npm install ejs
+
+Run Configure "models/db.js" to connect to mysql and run "schema.sql" to create table.

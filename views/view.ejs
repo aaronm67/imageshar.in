@@ -1,0 +1,86 @@
+<script type="text/javascript">
+    
+function getColorArray(ctx) {
+    var imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    var width = imageData.width;
+    var height = imageData.height;
+    var data = imageData.data;
+    var colors = [];
+    for (var y = 0; y < height; y++) {
+        var row = [];
+        for (var x = 0; x < width; x++) {
+            var idx = ((width * y) + x) * 4;
+            var r = data[idx];
+            var g = data[idx + 1];
+            var b = data[idx + 2];
+            var a = data[idx + 3];
+            row.push([r, g, b, a]);
+        }
+
+        colors[y] = row;
+    }
+
+    return colors;
+}
+
+$(function() {
+    $("img").load(function() {
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+        var container = $("#container");
+
+        var img = $(this);
+        canvas.width = img.width();
+        canvas.height = img.height();
+        container.width(img.width());
+        container.height(img.height());
+
+        context.drawImage(img[0], 0, 0);
+        var data = getColorArray(context);
+
+        function getColor(e) {
+            var cell = data[e.offsetY][e.offsetX];
+            var color = { r: cell[0], g: cell[1], b: cell[2], a: cell[3] }; 
+            var colorstr = "rgba(" + color.r + "," + color.g + "," + color.b + "," + color.a + ")";
+            $("#color").css("background-color", colorstr).text(colorstr);
+            $("#dot").css("top", e.offsetY).css("left", e.offsetX).show();
+        }
+
+        img.mousedown(function() {
+            $(this).bind("mousemove", function(e) {
+                getColor(e);
+            });
+        });
+        
+        img.mouseup(function(e) {
+            getColor(e);
+            $(this).unbind("mousemove");
+            $("#dot").hide();
+        });
+        img.bind("dragstart", function() { return false; });
+        $("body").bind("dragstart", function() { return false; });
+
+        $('#ruler').ruler({
+            minWidth:   30,
+            maxWidth:   screen.width,
+            width:      300,
+            draggable:  true,
+            resizable:  true,
+            autoResize: false
+        }).css("top", $("img").height() + 50);
+    });
+});
+</script>
+
+<style>
+    #color { width: 150px; height: 50px; }
+    #dot { position: absolute; width: 3px; height: 3px; background-color: black; z-index: 99999; display: none; border-radius: 3px; }
+    img { position: absolute; cursor: pointer; }
+</style>
+
+<div id="container">
+    <div id="dot"></div>
+    <img src="http://imageshar.in/img/<%- image.lookup %>" />
+</div>
+<div id="color"></div>
+<div id="ruler"></div>
