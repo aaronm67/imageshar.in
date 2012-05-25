@@ -26,7 +26,7 @@ var generateLookup = function() {
         randomstring += chars.substring(rnum,rnum+1);
     }
 
-    return randomstring;
+    return randomstring + ".jpg";
 };
 
 exports.addImage = function(image, cb) {
