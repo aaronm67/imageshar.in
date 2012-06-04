@@ -59,15 +59,6 @@ $(function() {
         });
         img.bind("dragstart", function() { return false; });
         $("body").bind("dragstart", function() { return false; });
-
-        $('#ruler').ruler({
-            minWidth:   30,
-            maxWidth:   screen.width,
-            width:      300,
-            draggable:  true,
-            resizable:  true,
-            autoResize: false
-        }).css("top", $("img").height() + 50);
     });
 });
 </script>

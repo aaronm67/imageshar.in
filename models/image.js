@@ -17,7 +17,15 @@ Image.prototype.addHit = function(cb) {
     });
 };
 
-var generateLookup = function() {
+Image.prototype.getExtension = function() {
+    if (this.filename && (!this.contentType || this.contentType == "application/octet-stream")) {
+        return this.filename.substring(this.filename.indexOf(".") + 1);
+    }
+
+    return this.contentType.substring(this.contentType.indexOf("/") + 1);
+};
+
+Image.prototype.generateLookup = function() {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
     var string_length = 8;
     var randomstring = '';
@@ -26,16 +34,17 @@ var generateLookup = function() {
         randomstring += chars.substring(rnum,rnum+1);
     }
 
-    return randomstring + ".jpg";
+    return randomstring + "." + this.getExtension();
 };
 
 exports.addImage = function(image, cb) {
-    var lookup = generateLookup();
+    var lookup = image.generateLookup();
     query(function() {
         this.query().insert('images', ['lookup', 'filename', 'contentType' ], [ lookup, image.filename, image.contentType ]).execute(
             function(error, result) {
                 if (error) {
 
+                    throw error;
                 }
                 image.id = result.id;
                 image.lookup = lookup;
@@ -49,7 +58,7 @@ exports.getImage = function(id, callback) {
     query(function() {
          this.query().select('*').from('images').where('lookup = ?', [ id ]).execute(function(err, rows) {
             if (rows.length == 0) { 
-                throw "Couldn't find image";
+                callback(false);
             }
 
             var image = new Image();

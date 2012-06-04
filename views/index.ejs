@@ -1,5 +1,9 @@
 drop or copy a file onto this page, I'll host it.
 <img id="loading" src="http://imageshar.in/img/TOZb9Ga0" style="display:none;" />
+
+<div>
+    <input type="file" id="fileinput" multiple />
+</div>
 <ul id="files"></ul>
 
 <a href="#" id="clear">clear</a>
@@ -42,10 +46,12 @@ drop or copy a file onto this page, I'll host it.
                         name: file.name, 
                         contentType: file.type 
                     }, function (resp) {
-                        var data = localStorage["images"].split(",");
-                        data.push(resp);
-                        localStorage["images"] = data.join();
-                        makeLi(resp);
+                        if (resp) {
+                            var data = localStorage["images"].split(",");
+                            data.push(resp);
+                            localStorage["images"] = data.join();
+                            makeLi(resp);
+                        }
                         count--;
                         if (count === 0) {
                             $("#loading").hide();
@@ -56,5 +62,6 @@ drop or copy a file onto this page, I'll host it.
         };
 
         $("body").fileReaderJS(opts).fileClipboard(opts);
+        $("#fileinput").fileReaderJS(opts);
     }); 
 </script>
