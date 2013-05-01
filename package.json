@@ -1,0 +1,11 @@
+{
+  "name" : "imageshar.in",
+  "author" : "Aaron Marasco",
+  "dependencies" : {
+     "express": ">= 1.2.0",
+     "mysql": ">= 0.0.0",
+     "ejs": ">= 0.0.0",
+     "express-ejs-layouts": ">= 0.0.0"
+  },
+  "version" : "0.0.1"
+}

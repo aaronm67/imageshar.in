@@ -1,14 +1,9 @@
-var mysql = require('db-mysql');
+var mysql = require('mysql');
 
-exports.runQuery = function(cb) {
-    new mysql.Database({
-        hostname: 'HOSTNAME',
-        user: 'DBUSER',
-        password: 'DB_PASS',
-         database: 'DB_NAME'
-    }).on('error', function(error) {
-             console.log('ERROR: ' + error);
-    }).on('ready', function(server) {
-     }).connect(cb);
- };
-
+exports.getConnection = function() {
+    return connection = mysql.createConnection({
+        host: "localhost",
+        user: "user",
+        password: "password"
+    });
+};

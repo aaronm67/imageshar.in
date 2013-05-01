@@ -1,13 +1,16 @@
 var express = require("express");
 var query = require("./models/image.js");
-var app = express.createServer();
+var app = express();
 var fs = require("fs");
-var PSD = require("psd").PSD;
+var expressLayouts = require('express-ejs-layouts')
 
 var image_dir = __dirname + "/public/img/";
 app.configure(function(){
     app.use(express.limit('5mb'));
     app.set('views', __dirname + '/views');
+    app.set('view engine', 'ejs');
+    app.set('layout', 'layout');
+    app.use(expressLayouts);
     app.use(express.bodyParser());
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
@@ -26,18 +29,8 @@ app.post("/upload", function(req, res) {
         contentType = "application/octet-stream";
     }
     var image = new query.Image(name, contentType);
-
-    var ispsd = image.getExtension() == "psd";
-    if (ispsd) {
-        image = new query.Image(name.replace("psd", "png"), "image/png");
-    }
-
     query.addImage(image, function(img) {
         fs.writeFile(image_dir + img.lookup, buf, function() {
-            if (ispsd) {
-                var psd = PSD.fromFile(image_dir + img.lookup);
-                psd.toFileSync(image_dir + img.lookup);
-            }
             res.send(img.lookup);
         });
     });
