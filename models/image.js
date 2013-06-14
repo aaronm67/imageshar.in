@@ -1,4 +1,3 @@
-//var query = require("./db.js").runQuery;
 var getCon = require("./db.js").getConnection;
 
 var Image = function(filename, contentType, hits) {
